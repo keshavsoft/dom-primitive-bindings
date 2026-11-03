@@ -108,3 +108,4 @@ src/v3/
 - **v1**: Staged architecture established with zero code comments and single-function default exports.
 - **v2**: Removed accidental DOM manipulation and cell extraction from samples, solidifying the pure delegation boundary.
 - **v3**: Declarative JSON transformation. Replaced imperative `.js` event arrays with pure, serializable `bindings.json` configurations.
+

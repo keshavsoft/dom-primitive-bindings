@@ -83,3 +83,4 @@ test("v3 bindEvents attaches container listener and delegates event", () => {
 
   assert.deepEqual(output, { clickedValue: "Send" });
 });
+
