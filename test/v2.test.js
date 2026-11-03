@@ -1,13 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import checkContainer from "../src/v2/guards/container/index.js";
-import checkBindings from "../src/v2/guards/bindings/index.js";
-import runGuards from "../src/v2/guards/index.js";
-import prepareBindings from "../src/v2/prepare/index.js";
-import bindEvents from "../src/v2/index.js";
+import checkContainer from "../src/v3/guards/container/index.js";
+import checkBindings from "../src/v3/guards/bindings/index.js";
+import runGuards from "../src/v3/guards/index.js";
+import prepareBindings from "../src/v3/prepare/index.js";
+import bindEvents from "../src/v3/index.js";
 
 test("v2 guards/container: resolves element or returns null", () => {
-  const mockContainer = { addEventListener: () => {} };
+  const mockContainer = { addEventListener: () => { } };
   assert.equal(checkContainer(mockContainer), mockContainer);
   assert.equal(checkContainer(null), null);
 });
@@ -25,7 +25,7 @@ test("v2 guards/bindings: filters invalid items and returns null if empty", () =
 });
 
 test("v2 guards: runGuards orchestrates container and bindings guards", () => {
-  const mockContainer = { addEventListener: () => {} };
+  const mockContainer = { addEventListener: () => { } };
   const bindings = [{ event: "click", selector: ".btn" }];
 
   const res = runGuards(mockContainer, bindings);
@@ -83,3 +83,4 @@ test("v2 bindEvents attaches container listener and delegates event", () => {
 
   assert.deepEqual(output, { clickedValue: "Send" });
 });
+
