@@ -1,12 +1,13 @@
 const u = {
   name: "dom-primitive-bindings",
-  version: "1.0.0"
+  version: "2.0.0"
 }, c = (t, n = u) => {
+  var e;
   if (!(!t || typeof globalThis > "u"))
     return globalThis.ks ?? (globalThis.ks = {}), globalThis.ks.domPrimitiveBindings = {
       meta: n,
       bindEvents: t
-    }, globalThis.ks.domPrimitiveBindings;
+    }, (e = globalThis.ks).bindEvents ?? (e.bindEvents = t), globalThis.ks.domPrimitiveBindings;
 }, l = (t) => typeof t == "string" ? document.getElementById(t) || document.querySelector(t) : t && typeof t == "object" && "addEventListener" in t ? t : null, a = (t) => {
   if (!t) return null;
   const n = l(t);
@@ -42,19 +43,19 @@ const u = {
     const s = (i = (r = n.target) == null ? void 0 : r.closest) == null ? void 0 : i.call(r, o.selector);
     !s || !e.contains(s) || v({ binding: o, event: n, matchElement: s });
   }
-}, E = (t, n, e) => {
+}, k = (t, n, e) => {
   t.addEventListener(n, (r) => {
     B({ bindings: e, event: r, container: t });
   });
-}, k = (t, n) => {
+}, E = (t, n) => {
   for (const [e, r] of n.entries())
-    E(t, e, r);
+    k(t, e, r);
   return t;
 }, T = (t, n = []) => {
   const e = p(t, n);
   if (!e) return null;
   const { container: r, bindings: i } = e, o = y(i);
-  return k(r, o), r;
+  return E(r, o), r;
 };
 c(T);
 export {

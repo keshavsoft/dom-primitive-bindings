@@ -10,8 +10,9 @@ const registerGlobal = (bindEvents, metadata = meta) => {
     bindEvents
   };
 
+  globalThis.ks.bindEvents ??= bindEvents;
+
   return globalThis.ks.domPrimitiveBindings;
 };
 
 export default registerGlobal;
-

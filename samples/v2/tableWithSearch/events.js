@@ -1,21 +1,18 @@
 export const rowBinding = {
   event: "click",
   selector: ".ks-btn-show",
-  runner: (target) => {
-    const row = target.closest("tr");
-    const cells = row ? Array.from(row.querySelectorAll("td:not(:last-child)")) : [];
-    const columns = ["serial", "itemName", "category", "baseUnit", "openingRate"];
-    const data = {};
-
-    cells.forEach((cell, index) => {
-      const key = columns[index];
-      if (key) data[key] = cell.textContent.trim();
-    });
-
-    return data;
-  },
-  onExtract: (rowData) => {
-    console.log("rowData : ", rowData);
+  runner: (target, instructions, clientData) => ({
+    eventType: clientData.event.type,
+    selector: ".ks-btn-show",
+    targetTag: target.tagName,
+    targetClass: target.className
+  }),
+  onExtract: (data) => {
+    console.log("Delegated Row Click:", data);
+    const logBox = document.getElementById("binding-log");
+    if (logBox) {
+      logBox.innerHTML = `Delegated Row Click: <span class="text-warning">${JSON.stringify(data)}</span>`;
+    }
   }
 };
 
@@ -25,18 +22,22 @@ export const searchBinding = {
   runner: (event) => {
     if (event.key !== "Enter") return null;
 
-    const input = event.target;
     return {
-      searchQuery: input.value,
-      timestamp: new Date().toLocaleTimeString()
+      eventType: event.type,
+      key: event.key,
+      targetTag: event.target.tagName,
+      value: event.target.value
     };
   },
-  onExtract: (searchData) => {
-    console.log("searchData : ", searchData);
+  onExtract: (data) => {
+    console.log("Delegated Keydown Event:", data);
+    const logBox = document.getElementById("binding-log");
+    if (logBox) {
+      logBox.innerHTML = `Delegated Keydown: <span class="text-info">${JSON.stringify(data)}</span>`;
+    }
   }
 };
 
 export const bindings = [rowBinding, searchBinding];
 
 export default bindings;
-

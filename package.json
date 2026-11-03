@@ -19,7 +19,7 @@
   },
   "files": [
     "src/index.js",
-    "src/v1",
+    "src/v2",
     "docs",
     "README.md",
     "LICENSE"
