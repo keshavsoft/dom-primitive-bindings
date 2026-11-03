@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM Primitive Bindings (v1) — Architecture & Story</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8fafc;
+      color: #334155;
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      color: #ffffff;
+      padding: 56px 0;
+      margin-bottom: 40px;
+    }
+    .feature-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      height: 100%;
+    }
+    pre {
+      background-color: #0f172a;
+      color: #f1f5f9;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+    code:not(pre code) {
+      background-color: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="hero-banner shadow-sm">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div>
+          <span class="badge bg-warning text-dark mb-2">v1 · Delegated Event Engine</span>
+          <h1 class="display-6 fw-bold mb-2">DOM Primitive Bindings</h1>
+          <p class="lead mb-0 text-white opacity-75">
+            Single-listener container delegation with zero overhead. Modern, declarative, and dynamic.
+          </p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="../samples/v1/index.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-play-circle me-1"></i> Interactive Samples
+          </a>
+          <a href="../index.html" class="btn btn-light btn-sm text-dark">
+            <i class="bi bi-house me-1"></i> Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pb-5" style="max-width: 1000px;">
+
+    <!-- Section 1: The Core Mental Model -->
+    <section class="card shadow-sm border-0 p-4 mb-4">
+      <h2 class="h5 fw-bold text-dark mb-3">
+        <i class="bi bi-diagram-3-fill text-success me-2"></i> The Event Delegation Story
+      </h2>
+      <p>
+        Traditional web apps attach <code>addEventListener</code> to individual buttons, inputs, and rows. When rows are re-rendered, paginated, or filtered, listeners are either lost or accidentally duplicated, creating memory leaks and stale event handlers.
+      </p>
+      <p class="mb-0">
+        <strong>DOM Primitive Bindings</strong> inverts this pattern. Exactly <strong>one listener per event type</strong> is attached to the parent container (e.g. <code>#table-container</code> or <code>#form-container</code>). When an event occurs, it bubbles to the container, checks for matched selectors via <code>closest(selector)</code>, and dispatches to the registered runner. New DOM elements added at runtime work immediately with zero re-binding!
+      </p>
+    </section>
+
+    <!-- Section 2: Staged Architecture -->
+    <section class="card shadow-sm border-0 p-4 mb-4">
+      <h2 class="h5 fw-bold text-dark mb-3">
+        <i class="bi bi-layers-fill text-primary me-2"></i> Staged Architecture in <code>src/v1/</code>
+      </h2>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="feature-card">
+            <h6 class="fw-bold text-success mb-2">
+              <i class="bi bi-shield-check me-1"></i> 1. guards/
+            </h6>
+            <p class="small text-muted mb-0">
+              Validates inputs before any DOM mutation occurs. Separated into <code>container/</code> (validates first input) and <code>bindings/</code> (validates second input array).
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="feature-card">
+            <h6 class="fw-bold text-info mb-2">
+              <i class="bi bi-collection me-1"></i> 2. prepare/
+            </h6>
+            <p class="small text-muted mb-0">
+              Groups bindings by event type into a <code>Map&lt;eventType, bindings[]&gt;</code>, ensuring only a single listener is registered per event type.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="feature-card">
+            <h6 class="fw-bold text-primary mb-2">
+              <i class="bi bi-earbuds me-1"></i> 3. listeners/
+            </h6>
+            <p class="small text-muted mb-0">
+              Attaches container event listeners that intercept bubbling browser events and pass them down into the dispatch pipeline.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="feature-card">
+            <h6 class="fw-bold text-warning mb-2">
+              <i class="bi bi-lightning-charge me-1"></i> 4. dispatch/
+            </h6>
+            <p class="small text-muted mb-0">
+              Finds the matching target via <code>closest(selector)</code>, resolves start inputs, executes the runner, and emits extracted data to <code>onExtract</code>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Browser API & Window.ks -->
+    <section class="card shadow-sm border-0 p-4 mb-4">
+      <h2 class="h5 fw-bold text-dark mb-2">
+        <i class="bi bi-globe2 text-info me-2"></i> Browser Usage via <code>window.ks</code>
+      </h2>
+      <p class="small text-muted mb-3">
+        Include the bundled distribution or ES module, then call <code>bindEvents</code>:
+      </p>
+
+      <pre class="mb-3"><code>&lt;script type="module" src="/docs/dist/v1/min.js"&gt;&lt;/script&gt;
+&lt;script type="module"&gt;
+  const bindings = [
+    {
+      event: "click",
+      selector: ".btn-delete",
+      runner: (target) => ({ id: target.dataset.id }),
+      onExtract: (data) => console.log("Deleted:", data)
+    }
+  ];
+
+  window.ks.domPrimitiveBindings.bindEvents("container-id", bindings);
+&lt;/script&gt;</code></pre>
+    </section>
+
+    <!-- Section 4: Design Rules & Zero Comments -->
+    <section class="card shadow-sm border-0 p-4">
+      <h2 class="h5 fw-bold text-dark mb-3">
+        <i class="bi bi-check2-circle text-success me-2"></i> Code Conventions
+      </h2>
+      <ul class="list-unstyled mb-0 small text-muted">
+        <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i><strong>Every folder has an <code>index.js</code></strong> file acting as its public gateway.</li>
+        <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i><strong>Single-function default export</strong> per file (no default export objects).</li>
+        <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i><strong>Zero comments in code:</strong> Folders and file names tell the story directly.</li>
+        <li><i class="bi bi-check-lg text-success me-2"></i><strong>Independent sibling package:</strong> Focused purely on event delegation without mixing extraction concerns.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="text-center text-muted py-4 border-top small">
+    DOM Primitive Bindings · Single Source of Truth: <code>v1</code> · MIT License
+  </footer>
+
+</body>
+
+</html>

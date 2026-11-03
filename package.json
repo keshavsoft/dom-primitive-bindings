@@ -1,0 +1,36 @@
+{
+  "name": "dom-primitive-bindings",
+  "version": "1.0.0",
+  "description": "Declarative, instruction-driven DOM delegated event bindings",
+  "type": "module",
+  "license": "MIT",
+  "author": "KeshavSoft",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keshavsoft/dom-primitive-bindings.git"
+  },
+  "bugs": {
+    "url": "https://github.com/keshavsoft/dom-primitive-bindings/issues"
+  },
+  "homepage": "https://github.com/keshavsoft/dom-primitive-bindings#readme",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src/index.js",
+    "src/v1",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "vite": "^6.4.1"
+  }
+}
