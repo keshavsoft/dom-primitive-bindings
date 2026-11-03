@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 3: The Staged Pipeline — DOM Primitive Bindings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8fafc;
+      color: #334155;
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
+    }
+    .story-hero {
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      color: #fff;
+      padding: 40px 0;
+    }
+    pre {
+      background-color: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+    code:not(pre code) {
+      background-color: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+    .stage-card {
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="story-hero shadow-sm mb-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <span class="badge bg-purple text-white mb-2" style="background:#7c3aed;">Chapter 3 of 4</span>
+          <h1 class="h3 fw-bold mb-1">The Staged Pipeline Architecture</h1>
+          <p class="text-white small mb-0">How src/v3 turns complex delegation into 4 crystal-clear decoupled stages.</p>
+        </div>
+        <a href="../index.html" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-arrow-left me-1"></i> Story Index
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pb-5" style="max-width: 900px;">
+
+    <!-- Overview -->
+    <section class="card shadow-sm border-0 p-4 mb-4">
+      <h2 class="h5 fw-bold text-dark mb-3">
+        <i class="bi bi-diagram-2 text-primary me-2"></i> Inside the <code>src/v3/</code> Pipeline
+      </h2>
+      <p>
+        Rather than writing a monolithic event listener, <code>dom-primitive-bindings</code> breaks the work into 4 decoupled stages where every folder contains an <code>index.js</code> and exports a single function:
+      </p>
+
+      <div class="row g-3">
+
+        <!-- Stage 1 -->
+        <div class="col-md-6">
+          <div class="stage-card h-100">
+            <span class="badge bg-success mb-2">Stage 1</span>
+            <h5 class="h6 fw-bold text-dark mb-1">guards/</h5>
+            <p class="small text-muted mb-0">
+              Validates and resolves inputs before touching the DOM:
+              <br>• <code>container/</code>: Resolves container ID or DOM node.
+              <br>• <code>bindings/</code>: Validates that bindings is a valid array of items with <code>event</code> and <code>selector</code>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="col-md-6">
+          <div class="stage-card h-100">
+            <span class="badge bg-info text-dark mb-2">Stage 2</span>
+            <h5 class="h6 fw-bold text-dark mb-1">prepare/</h5>
+            <p class="small text-muted mb-0">
+              Groups all bindings by event type into a <code>Map&lt;eventType, bindings[]&gt;</code>.
+              If you have 10 click bindings, it ensures only <strong>one</strong> click listener is attached to the container.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="col-md-6">
+          <div class="stage-card h-100">
+            <span class="badge bg-primary mb-2">Stage 3</span>
+            <h5 class="h6 fw-bold text-dark mb-1">listeners/</h5>
+            <p class="small text-muted mb-0">
+              Attaches the container event listeners. Each listener intercepts the native bubbling event and invokes the dispatch pipeline.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="col-md-6">
+          <div class="stage-card h-100">
+            <span class="badge bg-warning text-dark mb-2">Stage 4</span>
+            <h5 class="h6 fw-bold text-dark mb-1">dispatch/</h5>
+            <p class="small text-muted mb-0">
+              Matches target elements via <code>event.target.closest(binding.selector)</code>, resolves inputs (keyboard vs click element), and passes <code>{ event, matchElement }</code> to the runner.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Blueprint -->
+    <section class="card shadow-sm border-0 p-4 mb-4">
+      <h2 class="h5 fw-bold text-dark mb-3">
+        <i class="bi bi-code-square text-success me-2"></i> The Orchestrator (<code>src/v3/index.js</code>)
+      </h2>
+      <pre class="mb-0"><code>const bindEvents = (containerOrId, bindings = []) => {
+  // 1. Validate inputs
+  const guarded = runGuards(containerOrId, bindings);
+  if (!guarded) return null;
+
+  // 2. Group bindings by event type
+  const { container, bindings: validBindings } = guarded;
+  const eventGroups = prepareBindings(validBindings);
+
+  // 3. Attach container listeners (delegating to dispatch)
+  attachListeners(container, eventGroups);
+
+  return container;
+};</code></pre>
+    </section>
+
+    <!-- Navigation -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      <a href="./02-the-delegation-epiphany.html" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Chapter 2: The Epiphany
+      </a>
+      <a href="./04-declarative-json-bindings.html" class="btn btn-success">
+        Next: Chapter 4 — Declarative JSON Bindings <i class="bi bi-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+  </main>
+
+</body>
+
+</html>

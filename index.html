@@ -45,15 +45,18 @@
     <div class="container">
       <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div>
-          <span class="badge bg-warning text-dark mb-2">v2 · Pure Browser DOM Bindings</span>
+          <span class="badge bg-warning text-dark mb-2">v3 · JSON-Driven DOM Bindings</span>
           <h1 class="display-6 fw-bold mb-2">DOM Primitive Bindings</h1>
           <p class="lead mb-0 text-white opacity-75">
-            Single-listener delegated event binding for modern browser DOMs. Zero manipulation, pure delegation.
+            Single-listener container delegation powered by declarative <code>bindings.json</code>.
           </p>
         </div>
         <div class="d-flex gap-2">
           <a href="./docs/index.html" class="btn btn-outline-light btn-sm">
-            <i class="bi bi-book me-1"></i> Documentation
+            <i class="bi bi-book me-1"></i> Documentation & Stories
+          </a>
+          <a href="https://www.npmjs.com/package/dom-primitive-bindings" class="btn btn-warning btn-sm fw-bold">
+            <i class="bi bi-box-seam me-1"></i> npm
           </a>
         </div>
       </div>
@@ -66,35 +69,35 @@
 
       <!-- Portal Card 1: Interactive Browser Samples -->
       <div class="col-md-6">
-        <a href="./samples/v2/index.html" class="portal-card p-4">
+        <a href="./samples/v3/index.html" class="portal-card p-4">
           <div class="d-flex align-items-center justify-content-between mb-3">
-            <span class="badge bg-success">Interactive Demos (v2)</span>
+            <span class="badge bg-success">Interactive Demos (v3)</span>
             <i class="bi bi-play-circle-fill text-success fs-3"></i>
           </div>
-          <h2 class="h5 fw-bold text-dark mb-2">Browser DOM Samples (v2)</h2>
+          <h2 class="h5 fw-bold text-dark mb-2">JSON-Driven Samples (v3)</h2>
           <p class="small text-muted mb-4 flex-grow-1">
-            Real HTML and JS files running in browser. Pure event delegation without DOM manipulation or extraction: table clicks, live search keydowns, card clicks, and form delegation.
+            Real browser tests running directly from <code>bindings.json</code> files. Table clicks, live search keydowns, card clicks, and form delegation.
           </p>
           <div class="d-flex align-items-center text-success fw-bold small">
-            <span>Explore Samples (v2)</span>
+            <span>Explore Samples (v3)</span>
             <i class="bi bi-arrow-right ms-2"></i>
           </div>
         </a>
       </div>
 
-      <!-- Portal Card 2: Documentation & Architecture -->
+      <!-- Portal Card 2: Documentation & Stories -->
       <div class="col-md-6">
         <a href="./docs/index.html" class="portal-card p-4">
           <div class="d-flex align-items-center justify-content-between mb-3">
-            <span class="badge bg-primary">Architecture</span>
+            <span class="badge bg-primary">Story & Architecture</span>
             <i class="bi bi-journal-code text-primary fs-3"></i>
           </div>
-          <h2 class="h5 fw-bold text-dark mb-2">Technical Documentation</h2>
+          <h2 class="h5 fw-bold text-dark mb-2">The 4 Story Chapters & Architecture</h2>
           <p class="small text-muted mb-4 flex-grow-1">
-            Learn the boundary separation: why bindings handles event triggers and target resolution, leaving extraction and manipulation to outer application layers.
+            Follow the 4-part visual story: from the listener trap to the delegation epiphany, the 4 internal stages, and the joy of declarative JSON.
           </p>
           <div class="d-flex align-items-center text-primary fw-bold small">
-            <span>Read Documentation</span>
+            <span>Read Documentation & Stories</span>
             <i class="bi bi-arrow-right ms-2"></i>
           </div>
         </a>
@@ -102,31 +105,31 @@
 
     </div>
 
-    <!-- Direct Links to v2 Demos -->
+    <!-- Direct Links to v3 Demos -->
     <div class="card shadow-sm border-0 p-4 mb-4">
-      <h3 class="h6 fw-bold text-dark mb-3">Direct Sample Links (v2)</h3>
+      <h3 class="h6 fw-bold text-dark mb-3">Direct Sample Links (v3)</h3>
       <div class="list-group list-group-flush">
-        <a href="./samples/v2/tableWithSearch/index.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <a href="./samples/v3/tableWithSearch/index.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
           <div>
             <i class="bi bi-table text-success me-2"></i>
             <span class="fw-semibold">Table Event Delegation</span>
-            <span class="text-muted small ms-2">— Delegated row clicks and Enter key search</span>
+            <span class="text-muted small ms-2">— Driven by <code>tableWithSearch/bindings.json</code></span>
           </div>
           <i class="bi bi-chevron-right text-muted"></i>
         </a>
-        <a href="./samples/v2/cardGrid/index.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <a href="./samples/v3/cardGrid/index.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
           <div>
             <i class="bi bi-grid-3x3-gap text-primary me-2"></i>
             <span class="fw-semibold">Card Container Delegation</span>
-            <span class="text-muted small ms-2">— Captures button and card body clicks</span>
+            <span class="text-muted small ms-2">— Driven by <code>cardGrid/bindings.json</code></span>
           </div>
           <i class="bi bi-chevron-right text-muted"></i>
         </a>
-        <a href="./samples/v2/formEvents/index.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <a href="./samples/v3/formEvents/index.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
           <div>
             <i class="bi bi-ui-checks text-purple me-2"></i>
             <span class="fw-semibold">Form Delegation</span>
-            <span class="text-muted small ms-2">— Inputs, dropdowns, radios, and action buttons</span>
+            <span class="text-muted small ms-2">— Driven by <code>formEvents/bindings.json</code></span>
           </div>
           <i class="bi bi-chevron-right text-muted"></i>
         </a>
@@ -136,7 +139,7 @@
   </main>
 
   <footer class="text-center text-muted py-4 border-top small">
-    DOM Primitive Bindings · Single Source of Truth: <code>v2</code> · MIT License
+    DOM Primitive Bindings · Single Source of Truth: <code>v3</code> · MIT License
   </footer>
 
 </body>

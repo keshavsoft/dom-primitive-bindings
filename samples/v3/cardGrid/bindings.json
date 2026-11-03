@@ -1,0 +1,10 @@
+[
+  {
+    "event": "click",
+    "selector": ".btn-action"
+  },
+  {
+    "event": "click",
+    "selector": ".product-card"
+  }
+]

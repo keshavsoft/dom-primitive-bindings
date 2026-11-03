@@ -1,4 +1,4 @@
-import { bindings } from "./events.js";
+import bindings from "./bindings.json" with { type: "json" };
 import data from "../common/data.json" with { type: "json" };
 import columns from "../common/columns.json" with { type: "json" };
 
@@ -15,10 +15,29 @@ const start = () => {
       },
       targetHtmlId: "dom-render-container",
       classToApply: "",
-      appendPosition: "replace",
+      appendPosition: "replace"
     });
 
-    window.ks.domPrimitiveBindings?.bindEvents("dom-render-container", bindings);
+    const logBox = document.getElementById("binding-log");
+
+    const configuredBindings = bindings.map((binding) => ({
+      ...binding,
+      onExtract: (result, event, matchElement) => {
+        const detail = {
+          event: event.type,
+          selector: binding.selector,
+          targetTag: matchElement.tagName,
+          key: event.key,
+          value: matchElement.value
+        };
+        console.log("Delegated event from bindings.json:", detail);
+        if (logBox) {
+          logBox.innerHTML = `Delegated Event from <span class="text-info">bindings.json</span>: <span class="text-warning">${JSON.stringify(detail)}</span>`;
+        }
+      }
+    }));
+
+    window.ks.domPrimitiveBindings?.bindEvents("dom-render-container", configuredBindings);
 
   } catch (err) {
     console.error("Render error:", err);
@@ -30,4 +49,3 @@ const start = () => {
 };
 
 start();
-

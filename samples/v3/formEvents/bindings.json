@@ -1,0 +1,14 @@
+[
+  {
+    "event": "input",
+    "selector": ".form-field"
+  },
+  {
+    "event": "change",
+    "selector": ".form-field"
+  },
+  {
+    "event": "click",
+    "selector": ".btn-form-action"
+  }
+]
