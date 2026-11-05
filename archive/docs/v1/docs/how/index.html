@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 2: How We Achieved It — DOM Primitive Bindings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8fafc;
+      color: #334155;
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.7;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      color: #ffffff;
+      padding: 48px 0;
+      margin-bottom: 36px;
+    }
+    .nav-breadcrumb a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+    }
+    .nav-breadcrumb a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+    .stage-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      height: 100%;
+      border-left: 4px solid #047857;
+    }
+    pre {
+      background-color: #0f172a;
+      color: #f1f5f9;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+    code:not(pre code) {
+      background-color: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="hero-banner shadow-sm">
+    <div class="container" style="max-width: 900px;">
+      <nav class="nav-breadcrumb small mb-2">
+        <a href="../index.html"><i class="bi bi-arrow-left me-1"></i> Home</a> / Chapter 2
+      </nav>
+      <span class="badge bg-primary mb-2">Chapter 2: The Solution</span>
+      <h1 class="display-6 fw-bold mb-2">How We Achieved It</h1>
+      <p class="lead mb-0 text-white opacity-75">
+        The delegation epiphany and the four-stage decoupled pipeline.
+      </p>
+    </div>
+  </header>
+
+  <main class="container pb-5" style="max-width: 900px;">
+
+    <!-- The 3 Pillars of Delegation -->
+    <section class="card shadow-sm border-0 p-4 mb-4">
+      <h2 class="h5 fw-bold text-dark mb-3">The 3 Pillars of Event Delegation</h2>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="p-3 bg-light rounded border h-100">
+            <h6 class="fw-bold text-dark mb-1">1. Parent Anchor</h6>
+            <p class="small text-muted mb-0">A single, stable container element holds one listener. It never gets torn down during child re-renders.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 bg-light rounded border h-100">
+            <h6 class="fw-bold text-dark mb-1">2. Event Bubbling</h6>
+            <p class="small text-muted mb-0">Clicks anywhere inside the container naturally propagate upwards through standard DOM event propagation.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 bg-light rounded border h-100">
+            <h6 class="fw-bold text-dark mb-1">3. Selector Matching</h6>
+            <p class="small text-muted mb-0"><code>event.target.closest(selector)</code> accurately finds the intended target even when inner icons or spans are clicked.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The 4-Stage Architecture -->
+    <section class="mb-4">
+      <h2 class="h5 fw-bold text-dark mb-3">The Decoupled 4-Stage Pipeline</h2>
+      <p class="text-muted small">
+        To prevent messy side effects, the engine divides event delegation into four disciplined, independent stages:
+      </p>
+
+      <div class="row g-4">
+        
+        <div class="col-md-6">
+          <div class="stage-card">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="badge bg-secondary">Stage 1</span>
+              <i class="bi bi-shield-check text-success fs-5"></i>
+            </div>
+            <h3 class="h6 fw-bold text-dark mb-2">guards/</h3>
+            <p class="small text-muted mb-0">
+              Validates that the container element exists in the DOM and filters the bindings array. If any required check fails, execution aborts safely with no half-baked listeners.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="stage-card">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="badge bg-secondary">Stage 2</span>
+              <i class="bi bi-collection text-primary fs-5"></i>
+            </div>
+            <h3 class="h6 fw-bold text-dark mb-2">prepare/</h3>
+            <p class="small text-muted mb-0">
+              Groups the flat array of bindings by their event type (e.g., <code>click</code>, <code>keydown</code>) into a high-performance <code>Map</code> lookup.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="stage-card">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="badge bg-secondary">Stage 3</span>
+              <i class="bi bi-earbuds text-warning fs-5"></i>
+            </div>
+            <h3 class="h6 fw-bold text-dark mb-2">listeners/</h3>
+            <p class="small text-muted mb-0">
+              Attaches exactly <strong>one</strong> listener per event type to the root container. If you have 50 click actions, there is still only 1 browser listener created.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="stage-card">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="badge bg-secondary">Stage 4</span>
+              <i class="bi bi-send text-info fs-5"></i>
+            </div>
+            <h3 class="h6 fw-bold text-dark mb-2">dispatch/</h3>
+            <p class="small text-muted mb-0">
+              When a user interacts, this stage matches the target using <code>closest(selector)</code> and executes the corresponding callback with full event context.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+      <a href="../why/index.html" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Chapter 1: The Problem
+      </a>
+      <a href="../declarative/index.html" class="btn btn-success btn-sm px-4">
+        Chapter 3: Declarative JSON <i class="bi bi-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="text-center text-muted py-4 border-top small">
+    DOM Primitive Bindings · Declarative Event Delegation
+  </footer>
+
+</body>
+
+</html>
+

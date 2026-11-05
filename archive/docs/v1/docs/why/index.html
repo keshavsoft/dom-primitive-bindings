@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 1: The Problem (Why?) — DOM Primitive Bindings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8fafc;
+      color: #334155;
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.7;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      color: #ffffff;
+      padding: 48px 0;
+      margin-bottom: 36px;
+    }
+    .nav-breadcrumb a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+    }
+    .nav-breadcrumb a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+    .trap-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      height: 100%;
+      border-left: 4px solid #ef4444;
+    }
+    pre {
+      background-color: #0f172a;
+      color: #f1f5f9;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+    code:not(pre code) {
+      background-color: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="hero-banner shadow-sm">
+    <div class="container" style="max-width: 900px;">
+      <nav class="nav-breadcrumb small mb-2">
+        <a href="../index.html"><i class="bi bi-arrow-left me-1"></i> Home</a> / Chapter 1
+      </nav>
+      <span class="badge bg-danger mb-2">Chapter 1: The Problem</span>
+      <h1 class="display-6 fw-bold mb-2">Why Do We Need This?</h1>
+      <p class="lead mb-0 text-white opacity-75">
+        The everyday habit of attaching listeners to individual elements, and the three silent traps it creates.
+      </p>
+    </div>
+  </header>
+
+  <main class="container pb-5" style="max-width: 900px;">
+
+    <!-- Intro -->
+    <section class="card shadow-sm border-0 p-4 mb-4">
+      <h2 class="h5 fw-bold text-dark mb-3">The Everyday Habit</h2>
+      <p>
+        Every frontend engineer learns the same first pattern in DOM scripting: find an element, attach an event listener to it.
+      </p>
+      <pre><code>// The familiar instinct:
+document.querySelectorAll(".delete-btn").forEach(button => {
+    button.addEventListener("click", handleDelete);
+});</code></pre>
+      <p class="mb-0 text-muted">
+        It feels natural and intuitive. For 3 buttons on a static page, it works fine. But as applications grow into dynamic data tables, infinite lists, and interactive toolbars, this pattern silently degrades your application.
+      </p>
+    </section>
+
+    <!-- The 3 Traps -->
+    <section class="mb-4">
+      <h2 class="h5 fw-bold text-dark mb-3">The Three Silent Traps</h2>
+      <div class="row g-4">
+        
+        <div class="col-md-4">
+          <div class="trap-card">
+            <div class="text-danger fs-4 mb-2"><i class="bi bi-memory"></i></div>
+            <h3 class="h6 fw-bold text-dark mb-2">1. Memory Leaks</h3>
+            <p class="small text-muted mb-0">
+              When rows or cards are removed from the DOM, their attached listeners often remain held in memory references. In long-lived single-page apps, this causes memory consumption to steadily climb.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="trap-card">
+            <div class="text-danger fs-4 mb-2"><i class="bi bi-slash-circle"></i></div>
+            <h3 class="h6 fw-bold text-dark mb-2">2. Re-Render Dead Zones</h3>
+            <p class="small text-muted mb-0">
+              When dynamic data re-renders a table or list, newly injected HTML elements do not have listeners attached. You are forced to re-run your binding routines repeatedly after every render.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="trap-card">
+            <div class="text-danger fs-4 mb-2"><i class="bi bi-code-slash"></i></div>
+            <h3 class="h6 fw-bold text-dark mb-2">3. Wiring Bloat</h3>
+            <p class="small text-muted mb-0">
+              Hundreds of lines of code get dedicated solely to finding IDs, checking nulls, and registering callbacks. Business logic gets completely buried under repetitive DOM wiring plumbing.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- The Solution Preview -->
+    <section class="card shadow-sm border-0 p-4 mb-4 bg-light border-start border-4 border-success">
+      <h2 class="h5 fw-bold text-success mb-2">
+        <i class="bi bi-lightbulb-fill text-warning me-2"></i> The Epiphany
+      </h2>
+      <p class="mb-3">
+        Instead of attaching 100 listeners to 100 elements, the browser already provides an elegant mechanism built directly into the DOM tree: <strong>Event Bubbling</strong>.
+      </p>
+      <p class="mb-0">
+        By attaching <strong>a single listener</strong> to a stable parent container, every click on current and future children naturally bubbles up to be handled in one clean, centralized place.
+      </p>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+      <a href="../index.html" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-house me-1"></i> Home
+      </a>
+      <a href="../how/index.html" class="btn btn-success btn-sm px-4">
+        Chapter 2: How We Achieved It <i class="bi bi-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="text-center text-muted py-4 border-top small">
+    DOM Primitive Bindings · Declarative Event Delegation
+  </footer>
+
+</body>
+
+</html>
+
