@@ -1,16 +1,16 @@
 import meta from "./meta.js";
 
-const registerGlobal = (bindEvents, metadata = meta) => {
-  if (!bindEvents || typeof globalThis === "undefined") return;
+const registerGlobal = (api, metadata = meta) => {
+  if (!api || typeof globalThis === "undefined") return;
 
   globalThis.ks ??= {};
 
   globalThis.ks.domPrimitiveBindings = {
     meta: metadata,
-    bindEvents
+    ...api
   };
 
-  globalThis.ks.bindEvents ??= bindEvents;
+  globalThis.ks.bindEvents ??= api.bindEvents;
 
   return globalThis.ks.domPrimitiveBindings;
 };

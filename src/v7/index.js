@@ -2,9 +2,17 @@ import registerGlobal from "./register/index.js";
 import runGuards from "./guards/index.js";
 import prepareBindings from "./prepare/index.js";
 import attachListeners from "./listeners/index.js";
+import sample, {
+  sampleContainer,
+  sampleBindings,
+  sampleActions
+} from "./sample/index.js";
+
+const check = (containerOrId, bindings = [], actions = {}) =>
+  runGuards(containerOrId, bindings, actions);
 
 const bindEvents = (containerOrId, bindings = [], actions = {}) => {
-  const guarded = runGuards(containerOrId, bindings, actions);
+  const guarded = check(containerOrId, bindings, actions);
   if (!guarded) return null;
 
   const { container, bindings: validBindings } = guarded;
@@ -15,7 +23,21 @@ const bindEvents = (containerOrId, bindings = [], actions = {}) => {
   return container;
 };
 
-export { bindEvents };
+export {
+  bindEvents,
+  check,
+  sample,
+  sampleContainer,
+  sampleBindings,
+  sampleActions
+};
 export default bindEvents;
 
-registerGlobal(bindEvents);
+registerGlobal({
+  bindEvents,
+  check,
+  sample,
+  sampleContainer,
+  sampleBindings,
+  sampleActions
+});
