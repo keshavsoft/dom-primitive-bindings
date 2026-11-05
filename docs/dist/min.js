@@ -1,7 +1,7 @@
-// src/v4/register/meta.js
+// src/v5/register/meta.js
 var e = {
 	name: "dom-primitive-bindings",
-	version: "3.0.0"
+	version: "5.0.0"
 }, t = (t, n = e) => {
 	if (t && typeof globalThis < "u") return globalThis.ks ??= {}, globalThis.ks.domPrimitiveBindings = {
 		meta: n,
@@ -18,14 +18,26 @@ var e = {
 		container: n,
 		bindings: i
 	} : null;
-}, s = (e) => {
-	let t = /* @__PURE__ */ new Map();
-	for (let n of e) {
-		let e = t.get(n.event) ?? [];
-		e.push(n), t.set(n.event, e);
+}, s = (e, t = {}) => {
+	let n = t && typeof t === "object" && Object.keys(t).length > 0;
+	let r = n ? e.map((e) => {
+		if (e.action && typeof t[e.action] === "function" && typeof e.onExtract !== "function") {
+			return {
+				...e,
+				onExtract: (n, r, i) => {
+					t[e.action](r, i, n);
+				}
+			};
+		}
+		return e;
+	}) : e;
+	let i = /* @__PURE__ */ new Map();
+	for (let e of r) {
+		let n = i.get(e.event) ?? [];
+		n.push(e), i.set(e.event, n);
 	}
-	return t;
-}, c = (e) => s(e), l = (e, t, n) => e.root === "event" || t?.type?.startsWith("key") ? t : n, u = (e, t, n) => ({
+	return i;
+}, c = (e, t) => s(e, t), l = (e, t, n) => e.root === "event" || t?.type?.startsWith("key") ? t : n, u = (e, t, n) => ({
 	...e.clientData,
 	event: t,
 	targetElement: n
@@ -52,11 +64,11 @@ var e = {
 }, m = (e, t) => {
 	for (let [n, r] of t.entries()) p(e, n, r);
 	return e;
-}, h = (e, t = []) => {
-	let n = o(e, t);
-	if (!n) return null;
-	let { container: r, bindings: i } = n;
-	return m(r, c(i)), r;
+}, h = (e, t = [], n = {}) => {
+	let r = o(e, t);
+	if (!r) return null;
+	let { container: i, bindings: a } = r;
+	return m(i, c(a, n)), i;
 };
 t(h);
 export { h as bindEvents, h as default };
