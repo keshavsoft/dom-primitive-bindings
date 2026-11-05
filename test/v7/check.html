@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>v7 check() browser test</title>
+  </head>
+  <body>
+    <main id="app"></main>
+    <h1>v7 check() browser test</h1>
+    <pre id="result">Running…</pre>
+
+    <script type="module">
+      import { check } from "../../docs/dist/v7/min.js";
+      import actions from "./actions.js";
+
+      const output = document.querySelector("#result");
+
+      try {
+        const response = await fetch("./bindings.json");
+        if (!response.ok) {
+          throw new Error(`Could not load bindings.json (${response.status})`);
+        }
+
+        const sourceBindings = await response.json();
+        // v7 accepts exactly event, selector, and action. The source fixture
+        // also has narration metadata, so pass only the fields v7 validates.
+        const bindings = sourceBindings.map(({ event, selector, action }) => ({
+          event,
+          selector,
+          action
+        }));
+        const result = check("app", bindings, actions);
+
+        console.dir(result);
+        output.textContent = result
+          ? `PASS: check() returned a result for #${result.container.id}.\nBindings checked: ${result.bindings.length}\nActions: ${Object.keys(result.actions).join(", ")}`
+          : "FAIL: check() returned null. Confirm that #app exists.";
+      } catch (error) {
+        console.error(error);
+        output.textContent = `ERROR: ${error.message}`;
+      }
+    </script>
+  </body>
+</html>
