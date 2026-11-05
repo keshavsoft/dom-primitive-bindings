@@ -1,6 +1,6 @@
 {
   "name": "dom-primitive-bindings",
-  "version": "1.3.1",
+  "version": "1.4.1",
   "description": "Declarative, instruction-driven DOM delegated event bindings",
   "type": "module",
   "license": "MIT",
@@ -18,19 +18,10 @@
     ".": "./src/index.js"
   },
   "files": [
-    "src/index.js",
-    "src/v3",
-    "docs",
+    "src",
     "README.md",
     "LICENSE"
   ],
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "node --test"
-  },
-  "devDependencies": {
-    "vite": "^6.4.1"
-  }
+  "scripts": {},
+  "devDependencies": {}
 }
